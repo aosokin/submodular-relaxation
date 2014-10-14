@@ -1,7 +1,7 @@
 function createDataset_NSMR
-% createDataset_NSMR 
+% createDataset_NSMR creates artificial dataset for the NSMR experiment of the journal paper
 %
-% Anton Osokin (firstname.lastname@gmail.com),  24.09.2014
+% Anton Osokin (firstname.lastname@gmail.com),  14.10.2014
 
 %% dataset folder
 curFile = mfilename('fullpath');
@@ -9,9 +9,9 @@ dataPath = fileparts(curFile);
 
 %% dataset parameters
 nObjects = 50;
-nRows = 50;
-nCols = 50;
-nLabels = 10;
+nRows = 20;
+nCols = 20;
+nLabels = 5;
 weightPairwise = sqrt(0.5);
 
 %% fix rand seed

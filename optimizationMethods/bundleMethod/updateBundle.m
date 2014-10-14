@@ -1,5 +1,7 @@
 function bundle = updateBundle(bundle, currentPoint, fValue, subgradient )
-% updateBundle is an internal function for maximizeBundleMethodFixedSize
+%updateBundle is an internal function for maximizeBundleMethodFixedSize
+%
+% Anton Osokin (firstname.lastname@gmail.com),  16.05.2013
 
 % currentBundle = struct;
 % currentBundle.maxBundleSize = options.maxBundleSize;

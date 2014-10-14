@@ -1,4 +1,4 @@
-% 	icmPottsMex implements the ICM algorithm the tries to minimize MRF energy with pairwise Potts potentials
+% 	icmPottsMex implements the ICM algorithm to minimize an MRF energy with pairwise Potts potentials
 % 
 % 	Energy function:
 % 	E(x)   =   \sum_p D_p(x_p)   +   \sum_pq V_pq [x_p \neq x_q]

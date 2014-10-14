@@ -9,18 +9,22 @@ function createDataset_alahariPAMI10
 % Dynamic hybrid algorithms for MAP inference in discreteMRFs, 
 % IEEE TPAMI, vol. 32, no. 10, pp. 1846-1857, 2010.
 %
-% Anton Osokin (firstname.lastname@gmail.com),  24.09.2014
+% Anton Osokin (firstname.lastname@gmail.com),  14.10.2014
 
 dataUrl = 'http://www.di.ens.fr/~alahari/data/pami10data.tgz';
 
 % dataset folder
 curFile = mfilename('fullpath');
 dataPath = fileparts(curFile);
+dataFileName = 'pami10data.tgz';
+if ~exist( fullfile(dataPath, dataFileName) , 'file' )
+    fprintf('Downloading dataset from %s\n', dataUrl);
+    urlwrite( dataUrl, fullfile('data', dataFileName) );
+end
+fprintf('Unpacking the dataset\n');
+untar(fullfile(dataPath, dataFileName), dataPath);
 
-fprintf('Downloading dataset from %s\n', dataUrl);
-untar(dataUrl, dataPath);
 dataDir = fullfile(dataPath, 'pami10data');
-
 dataset = cell(0, 0);
 
 fprintf('Creating instaces\n');
@@ -209,7 +213,7 @@ dataset{iEnergy}.unary = curUnary';
 dataset{iEnergy}.pairwisePotts = sparse( [ curNeighbors(:, 1) + 1; curNeighbors(:, 2) + 1], [curNeighbors(:, 2) + 1; curNeighbors(:, 1) + 1], [curNeighbors(:, 3); curNeighbors(:, 3)] ); 
  
 
-%% Colur segmentation
+%% Colour segmentation
 objSegDir = fullfile(dataDir, 'colour-seg');
 
 % garden
@@ -267,7 +271,7 @@ dataset = dataset(:);
  
 %% normalize instances
 
-problemSet = 1 : length(dataset);
+problemSet =  1 : length(dataset);
 alphaExpRenormalizationValue = 100;
 roundingPrecision = 1e-3; 
     
@@ -307,10 +311,10 @@ end
 fprintf('Save dataset to %s\n', fullfile(dataPath, 'dataset_alahariPAMI10.mat'));
 save(fullfile(dataPath, 'dataset_alahariPAMI10.mat'), 'dataset');
 
+%% clean up
+rmdir(dataDir, 's')
 
-
-
-
+end
 
 
 

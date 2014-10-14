@@ -1,14 +1,44 @@
-function [ bestPoint, bestVal, bestPrimal, bestLabeling, timePlot, funcPlot, primalPlot ] = maximizeHanso( numVars, oracle, options )
-% maximizeHanso maximizes the dual function L-BFGS method form Hanso library:
+function [ bestDualPoint, bestDualValue, bestPrimalValue, bestPrimalLabeling, timePlot, dualPlot, primalPlot ] = maximizeHanso( numVars, oracle, options )
+% maximizeHanso maximizes the dual function with L-BFGS method form Hanso library:
 %   http://www.cs.nyu.edu/overton/software/hanso/hanso2_02.zip
 %
-% [ bestPoint, bestVal, timePlot, funcPlot, primalPlot ] = maximizeHanso( oracle, options );
+% Please cite the following paper if you use this code:
+%   A. S. Lewis and M. L. Overton, Nonsmooth optimization via quasi-newton methods,
+%   Mathematical Programming, vol. 141, no. 1-2, pp. 135–163, 2013.
+%
+% Usage:
+% [ bestDualPoint, bestDualValue, bestPrimalValue, bestPrimalLabeling, timePlot, dualPlot, primalPlot ] = maximizeHanso( numVars, oracle, options );
 %
 % INPUT:
-%
+%   numVars - number of variables to optimize over (a single number)
+%   oracle - function handle to the function to optimize
+%       should be of format [fValue, subgradient, primalEstimate] = oracle(X); where
+%           X is a vector of dimensionality numVars, 
+%           fValue - value of the function, 
+%           subgradient - a subgradient of the optimized function, 
+%           primalEstimate - the current estimate of primal labeling
+%   options (optional) - a structure with the parameter of the method, fields:
+%       maxIter - maximum number of iterations (default: 100)
+%       maxTime - maximum running time (default: inf)
+%       funcGetPrimalLabeling - function to compute the current estimate of the primal solution;
+%           should be of format [ energy, labeling ] = funcGetPrimalLabeling( primalEstimate ); where
+%               energy - is the energy value;
+%               labeling - the current labeling;
+%               primalEstimate - the initialization for the labeling coming from the dual
+%           (default: nan for all labelings), consider using icmPottsMex
+%       initialPoint - the initialization of the dual variables, (default: -(1e-3)*ones(numVars, 1)).
+%       verbose - the verbosity level, could be 'iter', 'final', or 'none' (default: 'iter')
+%       lbfgsVectorUpdateNum - the number of vectors to save and use in the limited memory updates 
+%           (default: 0 if numVars <= 100, otherwise 10);
 %
 % OUTPUT:
+%       bestDualPoint - the value of the variables that delivers the maximum-found function value
+%       bestDualValue - the function value at bestDualPoint
+%       bestPrimalValue - the lowest-found energy
+%       bestPrimalLabeling - the labeling that delivers bestPrimalValue
+%       timePlot, dualPlot, primalPlot - running time, the dual and the primal values for each oracle call 
 %
+%   Depends on Hanso v-2.02: optimizationMethods/hanso2_02
 %
 % Anton Osokin (firstname.lastname@gmail.com),  16.05.2013
 
@@ -16,14 +46,11 @@ if ~exist( 'options', 'var');
     options = struct;
 end
 options = setDefaultField(options, 'maxIter', 100);
-options = setDefaultField(options, 'maxOracleCalls', inf);
 options = setDefaultField(options, 'maxTime', inf);
-options = setDefaultField(options, 'funcGetPrimalLabeling', @(x) nan);
+options = setDefaultField(options, 'funcGetPrimalLabeling', @(x) funcGetPrimalLabeling_default(x));
 options = setDefaultField(options, 'initialPoint', []);
 options = setDefaultField(options, 'verbose', 'iter');
 options = setDefaultField(options, 'lbfgsVectorUpdateNum', []); 
-
-
 
 global globalBestPoint
 globalBestPoint = nan(numVars, 1);
@@ -57,7 +84,7 @@ end
 
 hanso_pars = struct;
 hanso_pars.nvar = numVars;
-hanso_pars.fgname = @(x) inverseOracle(x, oracle, options.funcGetPrimalLabeling);
+hanso_pars.fgname = @(x) negativeOracle(x, oracle, options.funcGetPrimalLabeling);
 
 
 
@@ -82,18 +109,19 @@ end
 [hansoPoint, hansoVal] = hanso(hanso_pars, hanso_options);
 
 % bestVal, timePlot, funcPlot, primalPlot
-bestPoint = hansoPoint;
-bestVal = -hansoVal;
-if abs( globalBestVal - bestVal ) > 1e-5 * (max(abs(globalBestVal), abs(bestVal)) + 1e-5)
-    warning('maximizeHanso:maxLowerBoundMismatch', ['Best LBs computed by Hanso and explicitly do not match, diff: ', num2str( globalBestVal - bestVal )]);
+bestDualPoint = hansoPoint;
+bestDualValue = -hansoVal;
+if abs( globalBestVal - bestDualValue ) > 1e-5 * (max(abs(globalBestVal), abs(bestDualValue)) + 1e-5)
+    warning('maximizeHanso:maxLowerBoundMismatch', ['Best LBs computed by Hanso and explicitly do not match, diff: ', num2str( globalBestVal - bestDualValue )]);
 end
 
-timePlot = globalTimePlot;
-funcPlot = globalFuncPlot;
-primalPlot = globalPrimalPlot;
+lastNonNan = find(~isnan(globalTimePlot), 1, 'last');
+timePlot = globalTimePlot(1 : lastNonNan);
+dualPlot = globalFuncPlot(1 : lastNonNan);
+primalPlot = globalPrimalPlot(1 : lastNonNan);
 
-bestPrimal = globalBestPrimal;
-bestLabeling = globalBestLabeling;
+bestPrimalValue = globalBestPrimal;
+bestPrimalLabeling = globalBestLabeling;
 
 clear global globalBestPoint
 clear global globalBestVal
@@ -116,7 +144,7 @@ function s = setDefaultField(s, f, value)
     end
 end
 
-function [fValNegative, subgradientNegative] = inverseOracle(x, oracle, getPrimalLabeling)
+function [fValNegative, subgradientNegative] = negativeOracle(x, oracle, getPrimalLabeling)
     [fVal, subgradient, primalEstimate] = oracle(x);
     fValNegative = -fVal;
     subgradientNegative = -subgradient;

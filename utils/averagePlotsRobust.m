@@ -1,6 +1,10 @@
 function [ xMean, yMean, yBoundLower, yBoundUpper ] = averagePlotsRobust( xArgs, yArgs, alpha, monotoneFlag )
+%averagePlotsRobust averages plots (with resamling) in a robust way.
+% xArgs, yArgs - cell arrays of x- and y-coordinates of the plots
 % alpha% of top and alpha% of worst points are not taken into account
-% monotoneFlag: 0 do nothing, 1 - make increasing, -1 - make decreasing
+% monotoneFlag: 0 do nothing, 1 - make increasing, -1 - make decreasing (default: 0)
+% 
+% 	Anton Osokin (firstname.lastname@gmail.com),  14.10.2014
 
 if ~exist( 'monotoneFlag', 'var')
     monotoneFlag = 0;
@@ -49,14 +53,16 @@ end
 
 
 % new arguments
-numTics = 500;
+numTics = 100;
 xMean = argmin : (argmax - argmin) / (numTics - 1) : argmax;
 
 yArgsNew = nan( numPlots, numTics );
 
 for iPlot = 1 : numPlots
-    lastNonNan = yArgs{iPlot}( find(~isnan(yArgs{iPlot}), 1, 'last') );
-    yArgs{iPlot}( isnan(yArgs{iPlot}) ) = lastNonNan;
+    lastNonNanId = find(~isnan(yArgs{iPlot}), 1, 'last');
+    firstNonNanId = find(~isnan(yArgs{iPlot}), 1, 'first');
+    yArgs{iPlot}( isnan(yArgs{iPlot}(:)) & lastNonNanId < (1 : length(yArgs{iPlot}))' ) = yArgs{iPlot}( lastNonNanId );
+    yArgs{iPlot}( isnan(yArgs{iPlot}(:)) & firstNonNanId >(1 : length(yArgs{iPlot}))' ) = yArgs{iPlot}( firstNonNanId );
     
     temp = interp1( xArgs{iPlot}, yArgs{iPlot}, xMean, 'nearest', nan );
     
@@ -64,11 +70,10 @@ for iPlot = 1 : numPlots
     nanId = find( isnan( temp ) );
     
     
-    temp( nanId( nanId < nonNanId ) ) = temp( find( ~isnan( temp ), 1, 'first' ) );
-    temp( nanId( nanId > nonNanId ) ) = temp( find( ~isnan( temp ), 1, 'last' ) );
+    temp( nanId( nanId < nonNanId ) ) = yArgs{iPlot}( firstNonNanId );
+    temp( nanId( nanId > nonNanId ) ) = yArgs{iPlot}( lastNonNanId );
     
     yArgsNew(iPlot, :) = temp;
-    
 end
 
 yMean = nan(size(xMean));
@@ -89,9 +94,6 @@ for iTic = 1 : numTics
     yBoundUpper(iTic) = curData(end);
     yBoundLower(iTic) = curData(1);
 end
-
-% yMean = median( yArgsNew, 1 ); 
-% yStd =  median(abs(bsxfun(@minus, yArgsNew, yMean)), 1);
 
 end
 

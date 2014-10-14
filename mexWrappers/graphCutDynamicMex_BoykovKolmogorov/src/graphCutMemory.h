@@ -11,7 +11,8 @@
 
 #define INFTY INT_MAX
 
-int round(double a);
+
+double round(double a);
 int isInteger(double a);
 
 //define types
@@ -97,7 +98,9 @@ void* operator new[](size_t size);
 void operator delete(void* ptr);
 void operator delete[](void* ptr);
 
-inline int round(double a)
+GraphType* getGraphHandle(const mxArray *x); // extract handle from mxArray 
+
+inline double round(double a)
 {
 	return (int)floor(a + 0.5);
 }
@@ -107,6 +110,5 @@ inline int isInteger(double a)
 	return (a - round(a) < 1e-6);
 }
 
-GraphType* getGraphHandle(const mxArray *x); // extract handle from mxArray 
 
 #endif /* _GRAPH_CUT_MEMORY_H_ */

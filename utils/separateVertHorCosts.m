@@ -1,4 +1,7 @@
 function [ vertCost, horCost, newNeighbors ] = separateVertHorCosts( neighbors, gridSize )
+% separateVertHorCosts extracts cost for vertical and horizontal edges from sparse matrix
+% 
+% 	Anton Osokin (firstname.lastname@gmail.com),  14.10.2014
 
 if ~isnumeric(gridSize) || ~isvector(gridSize) || length(gridSize) ~= 2 
     error('separateVertHorCosts:badGridSize', 'gridSize should be a column vector of length 2');

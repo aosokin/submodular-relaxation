@@ -1,14 +1,14 @@
-function [funcValue, subgradient, primalLabeling] = computeSmrDualDynamic_pairwisePotts(dataCost, neighbors, dualVars)
+function [dualValue, subgradient, primalLabeling] = computeSmrDualDynamic_pairwisePotts(dataCost, neighbors, dualVars)
 % computeSmrDualDynamic_pairwisePotts computes the value of the SMR dual function in Smr method for pairwise energy with Potts potentials
 %
 % The function minimizes the Lagrangian w.r.t. binary variables  Y given duals variables D:
-% L(Y, D) = \sum_i \sum_p U_{ip} y_{ip} + \sum_{ij} 0.5 P_{ij} \sum_{pq} ( [ y_{ip} == 1][y_{iq} == 0] + [ y_{ip} == 0][y_{iq} == 1] )
+% L(Y, D) = \sum_i \sum_p U_{ip} y_{ip} + \sum_{ij} P_{ij} \sum_{p} 0.5 * ( [ y_{ip} == 1][y_{ip} == 0] + [ y_{ip} == 0][y_{ip} == 1] ) ...
+%     +  \sum_i d_i ( \sum_p y_{ip} - 1)
 %
-%   this function makes use of dynamic graph cuts to compute the updates faster
+%   This function makes use of dynamic graph cuts to compute the updates faster
 %   the following global variables are used: computeSmrDualDynamic_pairwisePotts_graphHandle, computeSmrDualDynamic_pairwisePotts_lastPoint
-%           
 %
-% [funcValue, subgradient, primalLabeling]= computeSmrDualDynamic_pairwisePotts(dataCost, neighbors, dualVars)
+% [dualValue, subgradient, primalLabeling]= computeSmrDualDynamic_pairwisePotts(dataCost, neighbors, dualVars)
 %
 % INPUT
 %   dataCost   - unary potentials ( double[ numLabels x numNodes ])
@@ -16,9 +16,13 @@ function [funcValue, subgradient, primalLabeling] = computeSmrDualDynamic_pairwi
 %   dualVars   - vector of dual varuables ( double[ numNodes x 1 ])
 %
 % OUTPUT
-%   funcValue - the value of the dual function
+%   dualValue - the value of the dual function
 %   subgradient - value of subgradient
 %   primalLabeling - the estimate of primal labeling
+%
+% CAUTION! do not forget to call computeSmrDualDynamic_pairwisePotts_clearGlobal after the optimization is finished
+%
+% Depends on mexWrappers/graphCutDynamicMex_BoykovKolmogorov
 %
 % Anton Osokin (firstname.lastname@gmail.com),  24.09.2014
 
@@ -99,7 +103,7 @@ else
 end
 
 % compute the lower bound
-funcValue = sum(subEnergy) - sum(dualVars);
+dualValue = sum(subEnergy) - sum(dualVars);
 
 % get the primal estimate
 if nargout > 2

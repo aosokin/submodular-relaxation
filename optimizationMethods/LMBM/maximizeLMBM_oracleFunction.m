@@ -1,4 +1,7 @@
 function [fValNegative, subgradientNegative] = maximizeLMBM_oracleFunction(x)
+%maximizeLMBM_oracleFunction is the internal function for maximizeLMBM
+%
+% Anton Osokin (firstname.lastname@gmail.com),  16.05.2013
 
     global globalOraclePointer
     global globalPrimalFuncPointer

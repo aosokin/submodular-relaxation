@@ -1,8 +1,8 @@
-% 	graphCutDynamicMex - Matlab wrapper to the implementation of min-cut algorithm by Vladimir Kolmogorov:
+% 	graphCutDynamicMex - Matlab wrapper to the implementation of min-cut algorithm by Yuri Boykov and Vladimir Kolmogorov:
 % 	http://pub.ist.ac.at/~vnk/software/maxflow-v3.03.src.zip
 %
 %   This version can automatically perform reparametrization on all submodular edges.
-% 	This version supports dynamic updates of unary potentials
+% 	This version supports dynamic updates of unary potentials.
 % 
 %	 Usage:
 %	[cut] = graphCutDynamicMex(unaryTerms, pairwiseTerms);
@@ -31,4 +31,4 @@
 %
 %   See also deleteGraphCutDynamicMex, updateUnaryGraphCutDynamicMex
 % 
-% 	Anton Osokin (firstname.lastname@gmail.com),  24.09.2014
+% 	Anton Osokin (firstname.lastname@gmail.com),  19.05.2013

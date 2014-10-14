@@ -1,11 +1,11 @@
-function [funcValue, subgradient, primalLabeling] = computeNsmrDual_pairwisePotts(dataCost, neighbors, dualVars)
+function [dualValue, subgradient, primalLabeling] = computeNsmrDual_pairwisePotts(dataCost, neighbors, dualVars)
 % computeNsmrDual_pairwisePotts computes the value of the dual function in SMD method for pairwise energy with Potts potentials
 %
 % The function minimizes the NSMR Lagrangian over binary variables Y given duals variables D:
 % L(Y, D) = \sum_i \sum_p U_{ip} y_{ip} + \sum_{ij} P_{ij} \sum_{p} 0.5 * ( [ y_{ip} == 1][y_{ip} == 0] + [ y_{ip} == 0][y_{ip} == 1] ) ...
 %     +  \sum_i d_i ( \sum_p y_{ip} - 1)
 %
-% [funcValue, subgradient, primalLabeling]= computeNsmrDual_pairwisePotts(dataCost, neighbors, dualVars)
+% [dualValue, subgradient, primalLabeling]= computeNsmrDual_pairwisePotts(dataCost, neighbors, dualVars)
 %
 % INPUT
 %   dataCost   - unary potentials ( double[ numLabels x numNodes ])
@@ -14,9 +14,11 @@ function [funcValue, subgradient, primalLabeling] = computeNsmrDual_pairwisePott
 %   dualVars   - vector of dual varuables ( double[ numNodes x 1 ])
 %
 % OUTPUT
-%   funcValue - the value of the dual function
+%   dualValue - the value of the dual function
 %   subgradient - value of subgradient
 %   primalLabeling - the estimate of primal labeling
+%
+% Depends on mexWrappers/qpboMex
 %
 % Anton Osokin (firstname.lastname@gmail.com),  24.09.2014
 
@@ -56,7 +58,7 @@ for iLabel = 1 : numLabels
     unaryTerms = [zeros(numNodes, 1), termEdgeWeight(:, iLabel) + dualVars];
     [subLowerBound(iLabel), labelsQp(:, iLabel)] = qpboMex(unaryTerms, pairwiseTerms);
 end
-funcValue = sum(subLowerBound) - sum(dualVars);
+dualValue = sum(subLowerBound) - sum(dualVars);
 labelsQp(labelsQp < 0) = 0.5;
 
 % get the primal estimate

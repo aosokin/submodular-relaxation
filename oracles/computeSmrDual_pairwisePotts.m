@@ -1,11 +1,11 @@
-function [funcValue, subgradient, primalLabeling] = computeSmrDual_pairwisePotts(dataCost, neighbors, dualVars)
-% computeSmrDual_pairwisePotts computes the value of the dual function in SMR method for pairwise energy with Potts potentials
+function [dualValue, subgradient, primalLabeling] = computeSmrDual_pairwisePotts(dataCost, neighbors, dualVars)
+%computeSmrDual_pairwisePotts computes the value of the dual function in SMR method for pairwise energy with Potts potentials
 %
 % The function minimizes the Lagrangian over binary variables Y given duals variables D:
 % L(Y, D) = \sum_i \sum_p U_{ip} y_{ip} + \sum_{ij} P_{ij} \sum_{p} 0.5 * ( [ y_{ip} == 1][y_{ip} == 0] + [ y_{ip} == 0][y_{ip} == 1] ) ...
 %     +  \sum_i d_i ( \sum_p y_{ip} - 1)
 %
-% [funcValue, subgradient, primalLabeling]= computeSmrDual_pairwisePotts(dataCost, neighbors, dualVars)
+% [dualValue, subgradient, primalLabeling]= computeSmrDual_pairwisePotts(dataCost, neighbors, dualVars)
 %
 % INPUT
 %   dataCost   - unary potentials ( double[ numLabels x numNodes ])
@@ -14,9 +14,11 @@ function [funcValue, subgradient, primalLabeling] = computeSmrDual_pairwisePotts
 %   dualVars   - vector of dual varuables ( double[ numNodes x 1 ])
 %
 % OUTPUT
-%   funcValue - the value of the dual function
+%   dualValue - the value of the dual function
 %   subgradient - value of subgradient
 %   primalLabeling - the estimate of primal labeling
+%
+%   Depends on mexWrappers/graphCutMex_BoykovKolmogorov
 %
 % Anton Osokin (firstname.lastname@gmail.com),  24.09.2014
 
@@ -55,7 +57,7 @@ termEdgeWeight  = dataCost';
 for iLabel = 1 : numLabels
     [subEnergy(iLabel), labelsQp(:, iLabel)] = graphCutMex([termEdgeWeight(:, iLabel) + dualVars, zeros(numNodes, 1)], nonTermEdgesWeights);
 end
-funcValue = sum(subEnergy) - sum(dualVars);
+dualValue = sum(subEnergy) - sum(dualVars);
 
 % get the primal estimate
 if nargout > 2

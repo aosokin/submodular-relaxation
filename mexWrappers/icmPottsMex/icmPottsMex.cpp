@@ -4,9 +4,11 @@
 #include <vector>
 using std::vector;
 
+#include <cmath>
+
 #define MATLAB_ASSERT(expr,errorId,msg) if (!(expr)) {mexErrMsgIdAndTxt(errorId,msg);}
 
-int round(double a);
+double round(double a);
 int isInteger(double a);
 
 void mexFunction(int nlhs, mxArray *plhs[], 
@@ -188,7 +190,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
 	}
 }
 
-int round(double a)
+double round(double a)
 {
 	return (int)floor(a + 0.5);
 }

@@ -1,10 +1,15 @@
-function [funcValue, subgradient, primalLabeling] = computeDdtrwDual_pairwisePotts(dataCost, vertCost, horCost, dualVars)
-% computeDdtrwDualPotts computes the value of the dual functon of the grid DD-TRW
+function [dualValue, subgradient, primalLabeling] = computeDdtrwDual_pairwisePotts(dataCost, vertCost, horCost, dualVars)
+%computeDdtrwDualPotts computes the value of the dual functon of the grid DD-TRW
+%
+% Please cite the following paper if you use this method:
+%   N. Komodakis, N. Paragios, and G. Tziritas,
+%   MRF energy minimization and beyond via dual decomposition.
+%   IEEE TPAMI, vol. 33, no. 3, pp. 531–552, 2011.
 %
 % The function minimizes the Lagrangian over binary variables Y given duals variables D:
-% L(Y, D) = E_{vert}(Y^1) + E_{vert}(Y^2) + \sum_i \sum_k D_{ik} ( Y^1_{ik} - Y^2_{ik} )
+% L(Y, D) = E_{vert}(Y^1) + E_{hor}(Y^2) + \sum_i \sum_k D_{ik} ( Y^1_{ik} - Y^2_{ik} )
 %
-% [funcValue, subgradient, primalLabeling] = computeDdtrwDualPotts(dataCost, vertCost, horCost, dualVars)
+% [dualValue, subgradient, primalLabeling] = computeDdtrwDualPotts(dataCost, vertCost, horCost, dualVars)
 %
 % INPUT
 %   dataCost   - unary potentials ( double[ numLabels x numNodes ])
@@ -13,9 +18,13 @@ function [funcValue, subgradient, primalLabeling] = computeDdtrwDual_pairwisePot
 %   dualVars   - vector of dual varuables ( double[ numNodes*numLabels x 1 ])
 %
 % OUTPUT
-%   funcValue - the value of the dual function
+%   dualValue - the value of the dual function
 %   subgradient - value of subgradient
 %   primalLabeling - the estimate of primal labeling
+%
+% Depends on mexWrappers/viterbiPottsMex
+%
+% To construct vertCost and horCost from sparse matrix neighbors use separateVertHorCosts.m
 %
 % Anton Osokin (firstname.lastname@gmail.com),  16.05.2013
 
@@ -45,9 +54,6 @@ if ~isnumeric(dualVars) || ~iscolumn(dualVars) || length(dualVars) ~= numNodes *
     error('computeDdtrwDual_pairwisePotts:badDualVars', 'dualVars should be a column vector of length numNodes*numLabels');
 end
 dualVars = double(dualVars);
-
-% [ vertCost, horCost ] = separateVertHorCosts( neighbors, gridSize );
-
 dualVars = reshape(dualVars, [numLabels, numNodes]);
 
 ids = reshape( 1 : prod(gridSize), [gridSize(1), gridSize(2)] );
@@ -74,7 +80,7 @@ for iCol = 1 : gridSize(2)
 end
 
 %% compute results
-funcValue = sum(energyVert) + sum(energyHor);
+dualValue = sum(energyVert) + sum(energyHor);
 primalLabeling = labelsVert(:);
 
 % this appears to be very slow

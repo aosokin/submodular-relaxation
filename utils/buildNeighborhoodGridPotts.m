@@ -1,5 +1,5 @@
 function neighbors = buildNeighborhoodGridPotts(nRows, nCols, pottsWeight, connectivityType)
-% buildNeighborhoodGridPotts creates a 4-connected or 8-connected graph with Potts weights
+%buildNeighborhoodGridPotts creates a 4-connected or 8-connected graph with Potts weights
 %
 % neighbors = buildNeighborhoodGridPotts(nRows, nCols, pottsWeight, connectivityType)
 %

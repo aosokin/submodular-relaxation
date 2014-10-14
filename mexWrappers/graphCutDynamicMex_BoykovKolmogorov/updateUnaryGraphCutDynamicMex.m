@@ -1,5 +1,5 @@
 % 	updateUnaryGraphCutDynamicMex - a part of graphCutDynamicMex:
-%		Matlab wrapper to the implementation of min-cut algorithm by Vladimir Kolmogorov:
+%		Matlab wrapper to the implementation of min-cut algorithm by Yuri Boykov and Vladimir Kolmogorov:
 %	 	http://pub.ist.ac.at/~vnk/software/maxflow-v3.03.src.zip
 % 	
 %	updateUnaryGraphCutDynamicMex updates the terminal weights and computes the new cut value

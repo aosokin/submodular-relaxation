@@ -1,4 +1,7 @@
 function build_graphCutDynamicMex
+% build_graphCutDynamicMex build package graphCutDynamicMex
+%
+% Anton Osokin (firstname.lastname@gmail.com),  19.05.2013
 
 mexFlags = ' -largeArrayDims ';
 if ~isempty(strfind(mexext, '64'))

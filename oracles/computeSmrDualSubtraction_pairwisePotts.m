@@ -1,11 +1,11 @@
-function [funcValue, subgradient, primalLabeling] = computeSmrDualSubtraction_pairwisePotts(dataCost, neighbors, dualVars)
+function [dualValue, subgradient, primalLabeling] = computeSmrDualSubtraction_pairwisePotts(dataCost, neighbors, dualVars)
 % computeSmrDualSubtraction_pairwisePotts computes the value of the dual function in SMD method for pairwise energy with Potts potentials
 %
 % The function minimizes the SMR Lagrangian (subtraction trick) over binary variables Y given duals variables D:
 % L(Y, D) = \sum_i \sum_p U_{ip} y_{ip} + \sum_{ij} 0.5 * P_{ij} \sum_{p \neq q} ( [ y_{ip} == 1][y_{iq} == 0] + [ y_{ip} == 0][y_{iq} == 1] ) ...
 %     +  \sum_i d_i ( \sum_p y_{ip} - 1)
 %
-% [funcValue, subgradient, primalLabeling]= computeSmrDualSubtraction_pairwisePotts(dataCost, neighbors, dualVars)
+% [dualValue, subgradient, primalLabeling]= computeSmrDualSubtraction_pairwisePotts(dataCost, neighbors, dualVars)
 %
 % INPUT
 %   dataCost   - unary potentials ( double[ numLabels x numNodes ])
@@ -14,9 +14,11 @@ function [funcValue, subgradient, primalLabeling] = computeSmrDualSubtraction_pa
 %   dualVars   - vector of dual varuables ( double[ numNodes x 1 ])
 %
 % OUTPUT
-%   funcValue - the value of the dual function
+%   dualValue - the value of the dual function
 %   subgradient - value of subgradient
 %   primalLabeling - the estimate of primal labeling
+%
+% Depends on mexWrappers/graphCutMex_BoykovKolmogorov
 %
 % Anton Osokin (firstname.lastname@gmail.com),  24.09.2014
 
@@ -109,7 +111,7 @@ termWeights  = [dataCostLambda(:), zeros(numNodes * numLabels, 1)];
 [cutValue, cutLabels] = graphCutMex(termWeights, pairwiseTerms);
 labelsQp = reshape( cutLabels, [numLabels, numNodes] )';
 
-funcValue = cutValue - sum(dualVars); 
+dualValue = cutValue - sum(dualVars); 
 % get the primal estimate
 if nargout > 2
     [~, primalLabeling] = max(labelsQp, [], 2);

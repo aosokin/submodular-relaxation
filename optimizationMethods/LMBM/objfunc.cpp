@@ -6,8 +6,7 @@
 
 static char *objfunc_name = NULL;
 
-//void objfunc_(int *n, double *x, double *f, double *g)
-void OBJFUNC(int *n, double *x, double *f, double *g)
+void __CURRENT_OBJFUNC_NAME__(int *n, double *x, double *f, double *g)
 {
   int i;
   mxArray *lhs[2];

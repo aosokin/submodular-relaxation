@@ -1,4 +1,3 @@
-
 #include "mex.h"
 #include "objfunc.h"
 
@@ -6,8 +5,16 @@
 
 #define DBL_EPSILON (2.2204460492503131e-16)
 
+#ifdef __OS_WIN__
+	//Windows specific names
+	#define __CURRENT_LMBMU_NAME__  LMBMU
+#else
+	//Linux specific names
+	#define __CURRENT_LMBMU_NAME__  lmbmu_
+#endif
+
 extern "C" { 
-void LMBMU(int *n, int *na, int *mcu, int *mc, int *nw,
+void  __CURRENT_LMBMU_NAME__(int *n, int *na, int *mcu, int *mc, int *nw,
            double *x, double *f, double *rpar, int *ipar,
            int *iout, float *time, float *rtim, double *w);
 }
@@ -207,8 +214,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   
   /* compute the initial objective function value */
   int n_ = n;
-  // objfunc_(&n_, x, &f, NULL);
-  OBJFUNC(&n_, x, &f, NULL);
+  __CURRENT_OBJFUNC_NAME__(&n_, x, &f, NULL);
   
   if(print == 1)
   {
@@ -230,11 +236,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     printf("\n");
   }
   
-//  lmbmu_(&n, &na, &mcu, &mc, &nw, x, &f, rpar, ipar,
-//         iout, &time, rtim, w);
+  __CURRENT_LMBMU_NAME__(&n, &na, &mcu, &mc, &nw, x, &f, rpar, ipar,
+        iout, &time, rtim, w);
 
-  LMBMU(&n, &na, &mcu, &mc, &nw, x, &f, rpar, ipar,
-         iout, &time, rtim, w);
 
   
   if(print == 1)

@@ -1,6 +1,7 @@
 function [ nextPoint, bundleValue] = bundleProxStep( bundle, currentMeanPoint, inverseStepSize)
-% bundleProxStep is an internal function for maximizeBundleMethodFixedSize
-
+%bundleProxStep is an internal function for maximizeBundleMethodFixedSize
+%
+% Anton Osokin (firstname.lastname@gmail.com),  16.05.2013
 
 % bundle = struct;
 % bundle.maxBundleSize = options.maxBundleSize;

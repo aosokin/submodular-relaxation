@@ -1,5 +1,5 @@
 function computeSmrDualDynamic_pairwisePotts_clearGlobal()
-% computeSmrDualDynamic_pairwisePotts_clearGlobal clears global variables created by computeSmrDualDynamic_pairwisePotts
+%computeSmrDualDynamic_pairwisePotts_clearGlobal clears global variables created by computeSmrDualDynamic_pairwisePotts
 %
 % Anton Osokin (firstname.lastname@gmail.com),  23.05.2013
 

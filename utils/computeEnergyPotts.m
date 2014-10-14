@@ -1,5 +1,5 @@
 function [energy, dataTerm, smoothnessTerm] = computeEnergyPotts(dataCost, neighbors, labels)
-% computeEnergyPotts computes the value of pairwise energy with Potts potentials
+%computeEnergyPotts computes the value of pairwise energy with Potts potentials
 % 
 % [energy, dataTerm, smoothnessTerm] = computeEnergyPotts(dataCost, neighbors, labels)
 %
