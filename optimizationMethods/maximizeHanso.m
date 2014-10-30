@@ -4,7 +4,7 @@ function [ bestDualPoint, bestDualValue, bestPrimalValue, bestPrimalLabeling, ti
 %
 % Please cite the following paper if you use this code:
 %   A. S. Lewis and M. L. Overton, Nonsmooth optimization via quasi-newton methods,
-%   Mathematical Programming, vol. 141, no. 1-2, pp. 135–163, 2013.
+%   Mathematical Programming, vol. 141, no. 1-2, pp. 135-163, 2013.
 %
 % Usage:
 % [ bestDualPoint, bestDualValue, bestPrimalValue, bestPrimalLabeling, timePlot, dualPlot, primalPlot ] = maximizeHanso( numVars, oracle, options );
@@ -30,6 +30,7 @@ function [ bestDualPoint, bestDualValue, bestPrimalValue, bestPrimalLabeling, ti
 %       verbose - the verbosity level, could be 'iter', 'final', or 'none' (default: 'iter')
 %       lbfgsVectorUpdateNum - the number of vectors to save and use in the limited memory updates 
 %           (default: 0 if numVars <= 100, otherwise 10);
+%       argTol - argument convergence threshhold (default: 1e-4)
 %
 % OUTPUT:
 %       bestDualPoint - the value of the variables that delivers the maximum-found function value
@@ -51,6 +52,7 @@ options = setDefaultField(options, 'funcGetPrimalLabeling', @(x) funcGetPrimalLa
 options = setDefaultField(options, 'initialPoint', []);
 options = setDefaultField(options, 'verbose', 'iter');
 options = setDefaultField(options, 'lbfgsVectorUpdateNum', []); 
+options = setDefaultField(options, 'argTol', 1e-4); 
 
 global globalBestPoint
 globalBestPoint = nan(numVars, 1);
@@ -93,6 +95,8 @@ hanso_options.x0 = initialPoint;
 hanso_options.maxit = options.maxIter;
 hanso_options.samprad = [];
 hanso_options.cpumax = options.maxTime;
+hanso_options.normtol = options.argTol;
+
 if ~isempty(options.lbfgsVectorUpdateNum)
     hanso_options.nvec = options.lbfgsVectorUpdateNum;
 end

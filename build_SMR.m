@@ -62,9 +62,17 @@ end
 
 if exist('viterbiPottsMex', 'file') ~= 3  ||  forceBuild
     % build viterbiPottsMex
-    fprintf('Building viterbiPottsMex_time...\n')
+    fprintf('Building viterbiPottsMex...\n')
     cd(fullfile(smrRootDir, 'mexWrappers', 'viterbiPottsMex'));
     build_viterbiPottsMex;
+    cd(curDir);
+end
+
+if exist('alphaExpansionRobustHighOrderPottsMex', 'file') ~= 3  ||  forceBuild
+    % build viterbiPottsMex
+    fprintf('Building alphaExpansionRobustHighOrderPottsMex...\n')
+    cd(fullfile(smrRootDir, 'mexWrappers', 'alphaExpansionRobustHighOrderPottsMex'));
+    build_alphaExpansionRobustHighOrderPottsMex;
     cd(curDir);
 end
 

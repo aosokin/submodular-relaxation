@@ -13,10 +13,10 @@ createDataset_NSMR;
 load('dataset_NSMR.mat', 'dataset');
 
 %%  run TRW-S, NSMR, SMR + subtraction, DD TRW
-funcPlot_trws = cell(length(dataset), 1);
-funcPlot_ddtrw = cell(length(dataset), 1);
-funcPlot_nsmr = cell(length(dataset), 1);
-funcPlot_subtraction = cell(length(dataset), 1);
+dualPlot_trws = cell(length(dataset), 1);
+dualPlot_ddtrw = cell(length(dataset), 1);
+dualPlot_nsmr = cell(length(dataset), 1);
+dualPlot_subtraction = cell(length(dataset), 1);
 
 timePlot_trws = cell(length(dataset), 1);
 timePlot_ddtrw = cell(length(dataset), 1);
@@ -46,12 +46,12 @@ parfor iObject = 1 : numObjects
     
     % SMR with subtraction
     oracle_subtraction = @(dualVars) computeSmrDualSubtraction_pairwisePotts(dataCost, pottsCost, dualVars);
-    [ ~, ~, ~, ~, timePlot_subtraction{iObject}, funcPlot_subtraction{iObject}, primalPlot_subtraction{iObject} ] = ...
+    [ ~, ~, ~, ~, timePlot_subtraction{iObject}, dualPlot_subtraction{iObject}, primalPlot_subtraction{iObject} ] = ...
         maximizeHanso( nVars, oracle_subtraction, options );
     
     % NSMR
     oracle_nsmr = @(dualVars) computeNsmrDual_pairwisePotts(dataCost, pottsCost, dualVars);
-    [ ~, ~, ~, ~, timePlot_nsmr{iObject}, funcPlot_nsmr{iObject}, primalPlot_nsmr{iObject} ] = ...
+    [ ~, ~, ~, ~, timePlot_nsmr{iObject}, dualPlot_nsmr{iObject}, primalPlot_nsmr{iObject} ] = ...
         maximizeHanso( nVars, oracle_nsmr, options );
     
     % TRW-S
@@ -60,13 +60,13 @@ parfor iObject = 1 : numObjects
     options_trws.funcEps = -1;
     options_trws.verbosity = 0;
     
-    [ ~, ~, ~, funcPlot_trws{iObject}, primalPlot_trws{iObject}, timePlot_trws{iObject}] = ...
+    [ ~, ~, ~, dualPlot_trws{iObject}, primalPlot_trws{iObject}, timePlot_trws{iObject}] = ...
         trwsMex_time(dataCost, pottsCost, (ones(nLabels, nLabels) - eye(nLabels)), options_trws);
     
     % DD TRW
     [ vertCost, horCost ] = separateVertHorCosts( pottsCost, [nRows; nCols] );
     oracle_ddtrw = @(dualVars) computeDdtrwDual_pairwisePotts(dataCost, vertCost, horCost, dualVars);
-    [ ~, ~, ~, ~, timePlot_ddtrw{iObject}, funcPlot_ddtrw{iObject}, primalPlot_ddtrw{iObject} ] = ...
+    [ ~, ~, ~, ~, timePlot_ddtrw{iObject}, dualPlot_ddtrw{iObject}, primalPlot_ddtrw{iObject} ] = ...
         maximizeHanso( nVars * nLabels, oracle_ddtrw, options );
 end
 
@@ -76,10 +76,10 @@ gapNsmr = nan(numObjects, 1);
 gapSubtraction = nan(numObjects, 1);
 gapDdtrw = nan(numObjects, 1);
 for iObject = 1 : numObjects
-    gapTrws(iObject) = min(primalPlot_trws{iObject}(:)) - max(funcPlot_trws{iObject}(:));
-    gapNsmr(iObject) = min( primalPlot_nsmr{iObject}(:)) - max(funcPlot_nsmr{iObject}(:));
-    gapSubtraction(iObject) = min( primalPlot_subtraction{iObject}(:)) - max(funcPlot_subtraction{iObject});
-    gapDdtrw(iObject) = min( primalPlot_ddtrw{iObject}(:)) - max(funcPlot_ddtrw{iObject}(:));
+    gapTrws(iObject) = min(primalPlot_trws{iObject}(:)) - max(dualPlot_trws{iObject}(:));
+    gapNsmr(iObject) = min( primalPlot_nsmr{iObject}(:)) - max(dualPlot_nsmr{iObject}(:));
+    gapSubtraction(iObject) = min( primalPlot_subtraction{iObject}(:)) - max(dualPlot_subtraction{iObject});
+    gapDdtrw(iObject) = min( primalPlot_ddtrw{iObject}(:)) - max(dualPlot_ddtrw{iObject}(:));
 
 end
 

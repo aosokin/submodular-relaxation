@@ -2,8 +2,9 @@ function [dualValue, subgradient, primalLabeling] = computeSmrDual_pairwisePotts
 %computeSmrDual_pairwisePotts computes the value of the dual function in SMR method for pairwise energy with Potts potentials
 %
 % The function minimizes the Lagrangian over binary variables Y given duals variables D:
-% L(Y, D) = \sum_i \sum_p U_{ip} y_{ip} + \sum_{ij} P_{ij} \sum_{p} 0.5 * ( [ y_{ip} == 1][y_{ip} == 0] + [ y_{ip} == 0][y_{ip} == 1] ) ...
-%     +  \sum_i d_i ( \sum_p y_{ip} - 1)
+% L(Y, D) = \sum_i \sum_p U_{ip} y_{ip} 
+%       + \sum_{ij} P_{ij} \sum_{p} 0.5 * ( [ y_{ip} == 1][y_{ip} == 0] + [ y_{ip} == 0][y_{ip} == 1] ) 
+%       +  \sum_i d_i ( \sum_p y_{ip} - 1)
 %
 % [dualValue, subgradient, primalLabeling]= computeSmrDual_pairwisePotts(dataCost, neighbors, dualVars)
 %

@@ -1,5 +1,5 @@
 function [ vertCost, horCost, newNeighbors ] = separateVertHorCosts( neighbors, gridSize )
-% separateVertHorCosts extracts cost for vertical and horizontal edges from sparse matrix
+% separateVertHorCosts extracts cost for vertical and horizontal edges from a sparse matrix
 % 
 % 	Anton Osokin (firstname.lastname@gmail.com),  14.10.2014
 
@@ -19,7 +19,6 @@ deleteMask = neighRow > neighCol;
 neighRow( deleteMask ) = [];
 neighCol( deleteMask ) = [];
 neighWeight( deleteMask ) = [];
-
 
 % [~, ids] = sortrows( [ neighRow, neighCol ] );
 % neighRow = neighRow(ids);

@@ -1,9 +1,10 @@
 function [dualValue, subgradient, primalLabeling] = computeSmrDualDynamic_pairwisePotts(dataCost, neighbors, dualVars)
-% computeSmrDualDynamic_pairwisePotts computes the value of the SMR dual function in Smr method for pairwise energy with Potts potentials
+% computeSmrDualDynamic_pairwisePotts computes the value of the SMR dual function for pairwise energy with assotiative Potts potentials
 %
 % The function minimizes the Lagrangian w.r.t. binary variables  Y given duals variables D:
-% L(Y, D) = \sum_i \sum_p U_{ip} y_{ip} + \sum_{ij} P_{ij} \sum_{p} 0.5 * ( [ y_{ip} == 1][y_{ip} == 0] + [ y_{ip} == 0][y_{ip} == 1] ) ...
-%     +  \sum_i d_i ( \sum_p y_{ip} - 1)
+% L(Y, D) = \sum_i \sum_p U_{ip} y_{ip} 
+%       + \sum_{ij} P_{ij} \sum_{p} 0.5 * ( [ y_{ip} == 1][y_{ip} == 0] + [ y_{ip} == 0][y_{ip} == 1] ) 
+%       +  \sum_i d_i ( \sum_p y_{ip} - 1)
 %
 %   This function makes use of dynamic graph cuts to compute the updates faster
 %   the following global variables are used: computeSmrDualDynamic_pairwisePotts_graphHandle, computeSmrDualDynamic_pairwisePotts_lastPoint

@@ -3,7 +3,6 @@ function computeSmrDualDynamic_pairwisePotts_clearGlobal()
 %
 % Anton Osokin (firstname.lastname@gmail.com),  23.05.2013
 
-% check for the mex-file
 global computeSmrDualDynamic_pairwisePotts_graphHandle
 global computeSmrDualDynamic_pairwisePotts_lastPoint
 computeSmrDualDynamic_pairwisePotts_lastPoint = [];

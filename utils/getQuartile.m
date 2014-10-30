@@ -1,5 +1,5 @@
 function [med, lower, upper] = getQuartile(vec)
-%getQuartile finds the median and the two quartiles ov vector vec
+%getQuartile finds the median and the two quartiles of vector vec
 % 
 % 	Anton Osokin (firstname.lastname@gmail.com),  14.10.2014
 
@@ -11,7 +11,7 @@ else
     med = (vec(length(vec)  / 2 + 1) + vec(length(vec)  / 2 )) / 2;
 end
 
-lower = vec( round( length(vec) / 4 ) );
-upper = vec( round( length(vec) / 4 * 3 ) );
+lower = vec( max( round( length(vec) / 4 ), 1 ) );
+upper = vec( min( round( length(vec) / 4 * 3 ), length(vec) ) );
 
 end

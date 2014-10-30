@@ -14,8 +14,7 @@ function createDataset_alahariPAMI10
 dataUrl = 'http://www.di.ens.fr/~alahari/data/pami10data.tgz';
 
 % dataset folder
-curFile = mfilename('fullpath');
-dataPath = fileparts(curFile);
+dataPath = fileparts(mfilename('fullpath'));
 dataFileName = 'pami10data.tgz';
 if ~exist( fullfile(dataPath, dataFileName) , 'file' )
     fprintf('Downloading dataset from %s\n', dataUrl);
@@ -285,7 +284,7 @@ for iEnergy = problemSet
     %% run alpha-expansion
     [alphaExp_labels, alphaExp_energy, alphaExp_time] = alphaExpansionPotts(curUnary, curPairwise, roundingPrecision);
     
-    alphaExp_trueEnergy = computeEnergyPotts(curUnary, curPairwise, alphaExp_labels);
+    alphaExp_trueEnergy = computeEnergy_pairwisePotts(curUnary, curPairwise, alphaExp_labels);
     if abs(alphaExp_trueEnergy - alphaExp_energy) > 1e-6 * (abs(max(alphaExp_trueEnergy, alphaExp_energy)) + 1e-2)
         warning(['Problem: ', num2str(iEnergy), ' alpha-exp energy output does not equal recomputed energy, difference: ', num2str(abs(alphaExp_trueEnergy - alphaExp_energy)) ]);
     end
