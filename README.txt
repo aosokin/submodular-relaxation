@@ -17,17 +17,20 @@ We provide the following optimization routines:
 4) LMBM method [10];
 5) L-BFGS for non-smooth function (Hanso library [30]).
 
+If you use this code, please, cite the following paper in any resulting publication:
+
+Anton Osokin, Dmitry Vetrov, Submodular Relaxation for Inference in Markov Random Fields,
+IEEE Transactions on Pattern Analysis and Machine Intelligence, 37(7): 1347-1359, July 2015.
+
+The full text is available on arXiv.org (with some typos corrected):
+http://arxiv.org/abs/1501.03771
+
 Anton Osokin, (firstname.lastname@gmail.com)
-30.10.2014
-
-Please, cite the following paper in any resulting publication:
-
-Anton Osokin, Dmitry Vetrov, Submodular relaxation for inference in Markov random fields, accepted to IEEE TPAMI.
 
 INSTALLATION
 -----------------------------
 1) Download the package
-2) Run ./setup_SMR from the package folder
+2) Run ./setup_SMR from the package folder (requires internet connection to download the GCO library)
 3) Run ./example_SMR 
 
 The code was tested under 
